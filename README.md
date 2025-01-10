@@ -19,5 +19,11 @@ A machine learning project predicting housing prices in California based on real
 3. Model training and evaluation.
 4. Interactive visualizations.
 
+## Visualizations
+- Heatmaps
+- Correlation analysis
+- Scatter plots
+- Feature importance
+
 
 
