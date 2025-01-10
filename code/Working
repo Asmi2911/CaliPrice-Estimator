@@ -1,0 +1,87 @@
+#Load the Dataset
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#Load dataset
+data = pd.read_csv("/root/.cache/kagglehub/datasets/camnugent/california-housing-prices/versions/1/housing.csv")
+print(data.head())
+
+  
+#Handle Missing Values
+Check for missing values
+print(data.isnull().sum())
+
+#Separate numeric and non-numeric columns
+numeric_cols = data.select_dtypes(include=[np.number]).columns
+non_numeric_cols = data.select_dtypes(exclude=[np.number]).columns
+
+# Fill missing values for numeric columns with median
+data[numeric_cols] = data[numeric_cols].fillna(data[numeric_cols].median())
+
+# For non-numeric columns, you can use the mode (most frequent value)
+for col in non_numeric_cols:
+    data[col].fillna(data[col].mode()[0], inplace=True)
+
+print(data.isnull().sum())  # Verify missing values are handled
+
+  
+#New Features
+# Feature engineering: adding synthetic features
+data['crime_rate'] = np.random.uniform(0, 1, len(data))
+data['proximity_to_schools'] = np.random.randint(1, 5, len(data))
+
+print(data.head())
+
+
+#Convert Categorical Columns
+# Convert categorical columns to numerical (e.g., ocean_proximity)
+data = pd.get_dummies(data, drop_first=True)
+
+print(data.head())
+
+
+#Split the Data
+from sklearn.model_selection import train_test_split
+
+# Define target and features
+X = data.drop("median_house_value", axis=1)
+y = data["median_house_value"]
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(X_train.shape, X_test.shape)
+
+
+#Train Models
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+import xgboost as xgb
+import lightgbm as lgb
+
+# Random Forest
+rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_model.fit(X_train, y_train)
+rf_pred = rf_model.predict(X_test)
+rf_mse = mean_squared_error(y_test, rf_pred)
+
+# XGBoost
+xgb_model = xgb.XGBRegressor(objective="reg:squarederror", random_state=42)
+xgb_model.fit(X_train, y_train)
+xgb_pred = xgb_model.predict(X_test)
+xgb_mse = mean_squared_error(y_test, xgb_pred)
+
+# LightGBM
+lgb_model = lgb.LGBMRegressor(random_state=42)
+lgb_model.fit(X_train, y_train)
+lgb_pred = lgb_model.predict(X_test)
+lgb_mse = mean_squared_error(y_test, lgb_pred)
+
+print(f"Random Forest MSE: {rf_mse}")
+print(f"XGBoost MSE: {xgb_mse}")
+print(f"LightGBM MSE: {lgb_mse}")
+
+
+
