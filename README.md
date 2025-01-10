@@ -7,6 +7,9 @@ A machine learning project predicting housing prices in California based on real
 - Train regression models (Random Forest, XGBoost, LightGBM).
 - Evaluate model performance with visualizations.
 
+## Dataset
+- Source: [California Housing Prices on Kaggle](https://www.kaggle.com/datasets/camnugent/california-housing-prices)
+
 ## 🛠️ Tools Used
 - **Languages**: Python, Jupyter Notebook
 - **Libraries**: Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn, XGBoost
